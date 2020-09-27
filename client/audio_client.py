@@ -3,7 +3,7 @@ import socketio
 
 sio = socketio.Client()
 #Server connection
-port = 5000
+port = '5000'
 print("Server Connecting to server on port " + port)
 sio.connect('http://localhost:' + port)
 print('my sid is', sio.sid)
