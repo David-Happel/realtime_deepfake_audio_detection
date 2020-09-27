@@ -1,6 +1,7 @@
 from aiohttp import web
 import socketio
 import random
+import wave
 
 ## creates a new Async Socket IO Server
 sio = socketio.AsyncServer()
@@ -37,13 +38,39 @@ async def process_data(sid, data):
         session['total'] += random.randint(0,100)
         await sio.emit('response', session['total']/session['n'])
 
+@sio.on('audio_data')
+async def process_data(sid, data):
+    async with sio.session(sid) as session:
+        print('audio')
+        FORMAT = pyaudio.paInt16
+        CHANNELS = 2
+        RATE = 44100
+        WAVE_OUTPUT_FILENAME = session['n']+"_file.wav"
+        CHUNK = 1024
+        RECORD_SECONDS = 5
+        session['frames'].append(data['data'])
+        if len(session['frames']) = (RATE / CHUNK * RECORD_SECONDS):
+            print("done")
+            session['n'] += 1
+            frames = session['frames']
+            session['frames'] = []
 
+
+            waveFile = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
+            waveFile.setnchannels(CHANNELS)
+            waveFile.setsampwidth(audio.get_sample_size(FORMAT))
+            waveFile.setframerate(RATE)
+            waveFile.writeframes(b''.join(frames))
+            waveFile.close()
+
+        
 @sio.event
 async def connect(sid, environ):
     print('connect ', sid)
     async with sio.session(sid) as session:
         session['n'] = 0
         session['total'] = 0
+        session['frames'] = []
 
 @sio.event
 async def disconnect(sid):
