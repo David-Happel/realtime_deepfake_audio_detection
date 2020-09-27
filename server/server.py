@@ -2,6 +2,7 @@ from aiohttp import web
 import socketio
 import random
 import wave
+import pyaudio, sys, socket
 
 ## creates a new Async Socket IO Server
 sio = socketio.AsyncServer()
@@ -38,7 +39,7 @@ async def process_data(sid, data):
         session['total'] += random.randint(0,100)
         await sio.emit('response', session['total']/session['n'])
 
-@sio.on('audio_data')
+@sio.on('audio')
 async def process_data(sid, data):
     async with sio.session(sid) as session:
         print('audio')
@@ -49,7 +50,7 @@ async def process_data(sid, data):
         CHUNK = 1024
         RECORD_SECONDS = 5
         session['frames'].append(data['data'])
-        if len(session['frames']) = (RATE / CHUNK * RECORD_SECONDS):
+        if len(session['frames']) == (RATE / CHUNK * RECORD_SECONDS):
             print("done")
             session['n'] += 1
             frames = session['frames']

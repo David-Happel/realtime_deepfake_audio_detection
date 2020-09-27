@@ -1,4 +1,5 @@
 import socketio
+import pyaudio, sys, socket
 sio = socketio.Client()
 #Events
 @sio.on('message')
@@ -31,7 +32,7 @@ print('my sid is', sio.sid)
 
 
 #Emit events
-sio.emit('data', {'data': '010010'})
+# sio.emit('data', {'data': '010010'})
 
 #AUDIO Input
 FORMAT = pyaudio.paInt16
