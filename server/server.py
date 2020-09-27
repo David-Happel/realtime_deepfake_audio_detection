@@ -1,5 +1,6 @@
 from aiohttp import web
 import socketio
+import random
 
 ## creates a new Async Socket IO Server
 sio = socketio.AsyncServer()
@@ -25,10 +26,24 @@ async def print_message(sid, message):
     ## we print the socket ID and the message
     print("Socket ID: " , sid)
     print(message)
+    await sio.emit('message', message)
+
+@sio.on('data')
+async def process_data(sid, data):
+    async with sio.session(sid) as session:
+        print("Socket ID data: " , sid, 'n:', session['n'])
+        print(data)
+        session['n'] += 1
+        session['total'] += random.randint(0,100)
+        await sio.emit('response', session['total']/session['n'])
+
 
 @sio.event
 async def connect(sid, environ):
     print('connect ', sid)
+    async with sio.session(sid) as session:
+        session['n'] = 0
+        session['total'] = 0
 
 @sio.event
 async def disconnect(sid):

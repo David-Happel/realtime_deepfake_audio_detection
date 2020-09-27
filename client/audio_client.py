@@ -1,18 +1,17 @@
 import socketio
 
-
 sio = socketio.Client()
-#Server connection
-port = '5000'
-print("Server Connecting to server on port " + port)
-sio.connect('http://localhost:' + port)
-print('my sid is', sio.sid)
 
 
 #Events
-@sio.event
+@sio.on('message')
 def message(data):
-    print('I received a message!')
+    print('I received a message!', data)
+
+#Events
+@sio.on('response')
+def message(data):
+    print('Response: ', data)
 
 @sio.event
 def connect():
@@ -27,7 +26,13 @@ def connect_error():
 def disconnect():
     print("I'm disconnected!")
 
+#Server connection
+port = '8080'
+print("Server Connecting to server on port " + port)
+sio.connect('http://localhost:' + port)
+print('my sid is', sio.sid)
+
+
 
 #Emit events
-sio.emit('my message', {'foo': 'bar'})
-
+sio.emit('data', {'data': '010010'})
