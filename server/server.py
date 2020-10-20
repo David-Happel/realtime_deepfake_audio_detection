@@ -42,20 +42,21 @@ async def process_data(sid, data):
 @sio.on('audio')
 async def process_data(sid, data):
     async with sio.session(sid) as session:
-        print('audio')
         FORMAT = pyaudio.paInt16
         CHANNELS = 2
         RATE = 44100
-        WAVE_OUTPUT_FILENAME = session['n']+"_file.wav"
+        WAVE_OUTPUT_FILENAME = "audio/"+str(session['n'])+"_file.wav"
         CHUNK = 1024
         RECORD_SECONDS = 5
+        TOTAL_FRAMES = int(RATE / CHUNK * RECORD_SECONDS)
         session['frames'].append(data['data'])
-        if len(session['frames']) == (RATE / CHUNK * RECORD_SECONDS):
+        print(len(session['frames']), " / ", TOTAL_FRAMES)
+        if len(session['frames']) == TOTAL_FRAMES:
             print("done")
+            audio = pyaudio.PyAudio()
             session['n'] += 1
             frames = session['frames']
             session['frames'] = []
-
 
             waveFile = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
             waveFile.setnchannels(CHANNELS)
