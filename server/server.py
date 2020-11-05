@@ -59,8 +59,9 @@ async def process_data(sid, data):
 
     async with sio.session(sid) as session:
         session['frames'].append(data['data'])
-        print(len(session['frames']), " / ", TOTAL_CHUNKS)
+        print(data['id'], len(session['frames']), " / ", TOTAL_CHUNKS)
         if len(session['frames']) == TOTAL_CHUNKS:
+
             print("done")
             audio = pyaudio.PyAudio()
 
@@ -74,6 +75,9 @@ async def process_data(sid, data):
 
             print(waveFile.getnchannels(), waveFile.getsampwidth(), waveFile.getframerate(), waveFile.getnframes())
             waveFile.close()
+
+            # Process audio file
+            await sio.emit('response', {'guess': 0.57})
 
             spectogram, sr = file_to_spectogram(WAVE_OUTPUT_FILENAME)
             spectogram = spectogram_to_db(spectogram)
