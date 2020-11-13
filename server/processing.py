@@ -7,6 +7,9 @@ from spectogrammer import file_to_spectogram, spectogram_to_db, save_spectogram
 from config import FORMAT, CHANNELS, RATE, CHUNK, RECORD_SECONDS, TOTAL_CHUNKS
 from sio import sio
 
+# This is the main function that is called as a new thread each time a new full audio clip has been received.
+# It does all the processing and calls the model.
+
 
 async def process_audio(sid, n, frames):
     print("processing")
