@@ -20,6 +20,8 @@ async def print_message(sid, message):
     await sio.emit('message', message)
 
 
+# Called on receiving a new chunk of audio frames.
+# Counts up to the total amount of chunk needed per file
 @sio.on('audio')
 async def process_data(sid, data):
     async with sio.session(sid) as session:
@@ -34,6 +36,8 @@ async def process_data(sid, data):
             session['frames'] = []
 
 
+# Called on first connection.
+# Initalizes session variables
 @ sio.event
 async def connect(sid, environ):
     print('connect ', sid)
