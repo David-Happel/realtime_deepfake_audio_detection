@@ -8,7 +8,7 @@ sio = socketio.Client()
 
 @sio.on('response')
 def message(data):
-    print('guess: ', data['guess'])
+    print('guess: ', data['n'], data['guess'], 'avg:', data['avg'])
 
 
 @sio.event
@@ -48,9 +48,11 @@ stream = audio.open(format=FORMAT, channels=CHANNELS,
 print("recording...")
 frames = []
 
+n = 0
 while True:
+    n += 1
     for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
         data = stream.read(CHUNK)
         sio.emit('audio', {'data': data, 'id': i})
-        print(i)
-    print("finished recording")
+        # print(i)
+    print("finished recording:", n)
