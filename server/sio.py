@@ -8,8 +8,10 @@ async def index(request):
 
 # creates a new Async Socket IO Server
 sio = socketio.AsyncServer()
+
 # Creates a new Aiohttp Web Application
 app = web.Application()
+
 # Binds our Socket.IO server to our Web App
 # instance
 sio.attach(app)
@@ -17,8 +19,6 @@ sio.attach(app)
 # We bind our aiohttp endpoint to our app
 # router
 app.router.add_get('/', index)
-
-# We kick off our server
 
 
 def run_server():

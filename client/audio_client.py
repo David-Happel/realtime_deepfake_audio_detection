@@ -8,7 +8,7 @@ sio = socketio.Client()
 
 @sio.on('response')
 def message(data):
-    print('guess: ', data['n'], data['guess'])
+    print('guess: ', data['n'], data['guess'], 'avg:', data['avg'])
 
 
 @sio.event

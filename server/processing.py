@@ -16,10 +16,15 @@ async def process_audio(sid, n, frames):
 
     # Process audio file
     guess = fake_model()
-    await sio.emit('response', {'guess': guess, 'n': n}, room=sid)
-    print("prediction:", guess)
+    async with sio.session(sid) as session:
+        session['total'] += guess
+        avg = session['total'] / n
 
+    # Set response of to the specific session.
+    await sio.emit('response', {'guess': guess, 'avg': avg, 'n': n}, room=sid)
+    print("prediction:", guess)
     spectogram, sr = file_to_spectogram(filename)
+
     spectogram = spectogram_to_db(spectogram)
     save_spectogram(spectogram, sr, filename)
 

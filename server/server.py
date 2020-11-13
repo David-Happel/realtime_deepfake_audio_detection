@@ -26,8 +26,10 @@ async def process_data(sid, data):
         session['frames'].append(data['data'])
         # print(data['id'], len(session['frames']), " / ", TOTAL_CHUNKS)
         if len(session['frames']) == TOTAL_CHUNKS:
+            # Spawn new thread
             t = Thread(target=asyncio.run, args=(process_audio(sid, session['n'], session['frames']), ))
             t.start()
+
             session['n'] += 1
             session['frames'] = []
 
@@ -36,6 +38,7 @@ async def process_data(sid, data):
 async def connect(sid, environ):
     print('connect ', sid)
     async with sio.session(sid) as session:
+        # Set inital session variables
         session['n'] = 1
         session['total'] = 0
         session['frames'] = []
