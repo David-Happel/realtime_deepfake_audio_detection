@@ -6,6 +6,7 @@ import random
 from spectogrammer import file_to_spectogram, spectogram_to_db, save_spectogram
 from config import FORMAT, CHANNELS, RATE, CHUNK, RECORD_SECONDS, TOTAL_CHUNKS
 from sio import sio
+from dessa_model.predict import predict
 
 # This is the main function that is called as a new thread each time a new full audio clip has been received.
 # It does all the processing and calls the model.
@@ -13,19 +14,20 @@ from sio import sio
 
 async def process_audio(sid, n, frames):
     print("processing")
+    dirname = "audio/unlabeled/"
+    filename = str(n)+"_file.wav"
 
-    filename = "audio/"+str(n)+"_file.wav"
-    save_audio_to_wav(frames, filename)
+    save_audio_to_wav(frames, dirname+filename)
 
     # Process audio file
-    guess = fake_model(filename)
+    guess = predict("audio/", filename)
 
     async with sio.session(sid) as session:
         session['total'] += guess
         avg = session['total'] / n
 
     # Set response of to the specific session.
-    await sio.emit('response', {'guess': guess, 'avg': avg, 'n': n}, room=sid)
+    await sio.emit('response', {'guess': str(guess), 'avg': avg, 'n': n}, room=sid)
     print("prediction:", guess)
 
     # spectogram, sr = file_to_spectogram(filename)

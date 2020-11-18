@@ -134,3 +134,5 @@ dmypy.json
 
 audio/
 quantitative/
+data/inference_data/
+

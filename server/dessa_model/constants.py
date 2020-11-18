@@ -3,7 +3,7 @@ import numpy as np
 import yaml
 import tensorflow as tf
 
-config_yaml_file_name = 'config.yml'
+config_yaml_file_name = 'dessa_model/config.yml'
 
 
 
