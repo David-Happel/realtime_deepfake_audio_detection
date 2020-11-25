@@ -15,7 +15,7 @@ from dessa_model.predict import predict
 async def process_audio(sid, n, frames):
     print("processing")
     dirname = "audio/unlabeled/"
-    filename = str(n)+"_file.wav"
+    filename = str(n)+"_"+str(sid)+".wav"
 
     save_audio_to_wav(frames, dirname+filename)
 
