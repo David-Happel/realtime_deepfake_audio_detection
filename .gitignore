@@ -134,3 +134,6 @@ dmypy.json
 
 audio/
 quantitative/
+data/inference_data/
+data/asvspoof/
+
