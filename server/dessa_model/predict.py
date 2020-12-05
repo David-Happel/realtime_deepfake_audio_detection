@@ -34,4 +34,4 @@ def predict(dirpath, filename):
 
 
 if __name__ == '__main__':
-    print(predict("audio/", "1_file.wav"))
+    print(predict("audio/", "LA_E_1008103.flac"))

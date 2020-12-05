@@ -2,16 +2,19 @@ import socketio
 import pyaudio
 import sys
 import socket
+import time
 # import numpy
 sio = socketio.Client()
 
 guesses = []
+emit_times = dict()
 
 
 @ sio.on('response')
 def message(data):
     guesses.append([data['n'], data['guess'], data['avg']])
-    print('guess: ', data['n'], data['guess'], 'avg:', data['avg'])
+    time_passed = time.perf_counter() - emit_times[data['n']]
+    print('guess: ', data['n'], data['guess'], 'avg:', data['avg'], "time:", time_passed)
 
 
 @ sio.event
@@ -47,7 +50,7 @@ FORMAT = pyaudio.paInt16
 CHANNELS = 1
 RATE = 44100
 CHUNK = 1024
-RECORD_SECONDS = 5
+RECORD_SECONDS = 3
 
 audio = pyaudio.PyAudio()
 
@@ -66,3 +69,4 @@ while True:
         sio.emit('audio', {'data': data, 'id': i})
         # print(i)
     print("finished recording:", n)
+    emit_times[n] = time.perf_counter()
