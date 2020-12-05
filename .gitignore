@@ -138,3 +138,4 @@ data/inference_data/
 data/asvspoof/
 
 .vscode/
+temp/
