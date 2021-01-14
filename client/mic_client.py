@@ -53,13 +53,15 @@ def audo_client():
 
     n = 0
     while running:
-        n += 1
-        for i in range(0, TOTAL_CHUNKS):
-            data = stream.read(CHUNK)
-            sio.emit('audio', {'data': data, 'id': i})
-            # print(i)
-        print("finished recording:", n)
-        emit_times[n] = time.perf_counter()
+        if n < 11:
+            n += 1
+            for i in range(0, TOTAL_CHUNKS):
+                data = stream.read(CHUNK)
+                sio.emit('audio', {'data': data, 'id': i})
+                # print(i)
+            print("finished recording:", n)
+            emit_times[n] = time.perf_counter()
+
     sio.disconnect()
     clean_up(stream, audio, guesses)
 
